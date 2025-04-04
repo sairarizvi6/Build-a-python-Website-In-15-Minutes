@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas as pd
-import matplotlib.pyplot as plt
 
 st.title("Simple Data Dashboard")
 
@@ -10,7 +9,7 @@ if uploaded_file is not None:
     df = pd.read_csv(uploaded_file)
 
     st.subheader("Data Preview")
-    st.write(df.head())
+    st.dataframe(df.head())  # Better than st.write() for DataFrames
 
     st.subheader("Data Summary")
     st.write(df.describe())
@@ -22,13 +21,13 @@ if uploaded_file is not None:
     selected_value = st.selectbox("Select value", unique_values)
 
     filtered_df = df[df[selected_column] == selected_value]
-    st.write(filtered_df)
+    st.dataframe(filtered_df)  # Better display for DataFrames
 
     st.subheader("Plot Data")
-    x_column = st.selectbox("Select x-axis column", columns)
-    y_column = st.selectbox("Select y-axis column", columns)
+    x_column = st.selectbox("Select x-axis column", columns, key="x_axis")  # Unique key
+    y_column = st.selectbox("Select y-axis column", columns, key="y_axis")  # Unique key
 
     if st.button("Generate Plot"):
-        st.line_chart(filtered_df.set_index(x_column)[y_column])
+        st.line_chart(data=filtered_df, x=x_column, y=y_column)  # Simpler syntax
 else:
-    st.write("Waiting on file upload...")
+    st.info("Waiting for file upload...")  # Better than st.write()
